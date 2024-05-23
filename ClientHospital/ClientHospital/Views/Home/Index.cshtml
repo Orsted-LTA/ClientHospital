@@ -1,0 +1,285 @@
+﻿@model ClientHospital.viewModels.ViewModel
+
+<div class="d-flex justify-content-center form p-5 bg-light rounded" style="background-image: url('content/images/background.png'); background-size: cover; background-position: center;">
+    <div class="p-5 text-light" style="background-color: black; border-radius: 20px; border: 2px solid #000; width: 60%;">
+        <h1 class="text-center text-light">Đặt Lịch</h1>
+        <form asp-action="SubmitData" asp-controller="Home" method="post" id="myForm">
+            <div class="row">
+                <div class="col">
+                    <label>Mã hồ sơ (nếu có)</label>
+                    <input asp-for="HoSo.MaHoSo" class="form-control" placeholder="Nhập Mã hồ sơ">
+                </div>
+                <div class="col">
+                    <span>Họ, Tên lót</span>
+                    <span class="span">(*)</span>
+                    <input asp-for="HoSo.HoDem" class="form-control" placeholder="Nhập họ và chữ lót">
+                </div>
+                <div class="col">
+                    <span>Tên</span>
+                    <span class="span"> (*)</span>
+                    <input asp-for="HoSo.Ten" class="form-control" placeholder="Nhập tên">
+                </div>
+                <div class="col">
+                    <span>Giới tính</span>
+                    <span class="span"> (*)</span>
+                    <select asp-for="HoSo.GioiTinh" class="form-select">
+                        <option selected value="">--</option>
+                        <option value="true">Nam</option>
+                        <option value="false">Nữ</option>
+                    </select>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col">
+                    <span>CCCD</span>
+                    <span class="span"> (*)</span>
+                    <input asp-for="HoSo.CCCD" class="form-control" placeholder="Nhập mã CCCD">
+                </div>
+                <div class="col">
+                    <span>Điện thoại</span>
+                    <span class="span">(*)</span>
+                    <input asp-for="HoSo.SDT" class="form-control" placeholder="Nhập số điện thoại">
+                </div>
+                <div class="col">
+                    <span>Email</span>
+                    <span class="span"> (*)</span>
+                    <input asp-for="HoSo.Email" class="form-control" placeholder="Nhập email">
+                </div>
+                <div class="col">
+                    <span>Ngày sinh</span>
+                    <span class="span"> (*)</span>
+                    <input asp-for="HoSo.NgaySinh" type="date" class="form-control">
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col">
+                    <span>Tỉnh/TP</span>
+                    <span class="span">(*)</span>
+                    <select class="form-select" name="TinhTP" id="TinhTP" onchange="fetchHuyen()">
+                        <option value="">-Chọn Tỉnh-</option>
+                    </select>
+                </div>
+                <div class="col">
+                    <span>Quận/Huyện</span>
+                    <span class="span">(*)</span>
+                    <select class="form-select" name="QuanHuyen" id="QuanHuyen" onchange="fetchPhuong()">
+                        <option value="">-Chọn Huyện-</option>
+                    </select>
+                </div>
+                <div class="col">
+                    <span>Phường/Xã</span>
+                    <span class="span">(*)</span>
+                    <select class="form-select" name="PhuongXa" id="PhuongXa">
+                        <option value="">-Chọn Phường-</option>
+                    </select>
+                </div>
+                <div class="col">
+                    <span>Số nhà</span>
+                    <input asp-for="HoSo.Duong" class="form-control" placeholder="Nhập số nhà">
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col">
+                    <span>Ngày Khám</span>
+                    <span class="span">(*)</span>
+                    <input asp-for="HoSo.NgayTaoHoSo" type="date" class="form-control">
+                </div>
+                <div class="col">
+                    <span>Giờ Khám</span>
+                    <span class="span">(*)</span>
+                    <select asp-for="HoSo.GioKham" class="form-select">
+                        <option>--</option>
+                        <option>07:30</option>
+                        <option>08:00</option>
+                        <option>08:30</option>
+                        <option>09:00</option>
+                        <option>09:30</option>
+                        <option>10:00</option>
+                        <option>10:30</option>
+                        <option>13:30</option>
+                        <option>14:00</option>
+                        <option>14:30</option>
+                        <option>15:00</option>
+                        <option>15:30</option>
+                        <option>16:00</option>
+                    </select>
+                </div>
+                <div class="col">
+                    <span>Phòng Khám</span>
+                    <span class="span">(*)</span>
+                  <select asp-for="HoSo.IdPhong" class="form-select">
+                        <option value="" selected>-- Select --</option>
+                        @foreach (var phongkham in Model.PhongKhams)
+                        {
+                            <option value="@phongkham.id">@phongkham.tenPhongKham</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col">
+                    <span>Quốc tịch</span>
+                    <select asp-for="HoSo.IdQuocTich" id="Quoctich" class="form-select">
+                        <option value="" selected>-- Select --</option>
+                        @foreach (var quoctich in Model.QuocTichs)
+                        {
+                            <option value="@quoctich.id">@quoctich.TenQuocTich</option>
+                        }
+                    </select>
+                </div>
+                <div class="col">
+                    <span>Dân tộc</span>
+                    <select asp-for="HoSo.IdDanToc" class="form-select">
+                        <option value="" selected>-- Select --</option>
+                        @foreach (var dantoc in Model.DanTocs)
+                        {
+                            <option value="@dantoc.id">@dantoc.TenDanToc</option>
+                        }
+                    </select>
+                </div>
+                <div class="col">
+                    <span>Nghề nghiệp</span>
+                    <select asp-for="HoSo.IdNgheNghiep" class="form-select">
+                        <option value="" selected>-- Select --</option>
+                        @foreach (var nghenghiep in Model.NgheNghieps)
+                        {
+                            <option value="@nghenghiep.id">@nghenghiep.TenNgheNghiep</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <br />
+            <div class="row d-flex justify-content-center align-items-center">
+                <div class="col-md-3">
+                    <span>Mã CapCha</span>
+                </div>
+                <div class="col-md-3">
+                    <img class="img-fluid" alt="Captcha Image" src="image1.png">
+                </div>
+                <div class="col-md-3">
+                    <input type="text" class="form-control" id="captcha-input" placeholder="Type the text here" aria-label="Captcha input">
+                </div>
+            </div>
+            <br />
+            <div class="d-flex justify-content-center align-items-center" style="height: auto;">
+                 <input type="submit" name="DangKi" class="btn btn-primary"></input>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        console.log("Page loaded");
+        fetchTinh();
+    });
+
+    function fetchTinh() {
+        fetch('https://localhost:7196/tinh')
+            .then(response => response.json())
+            .then(data => {
+                const selectTinh = document.getElementById('TinhTP');
+                data.forEach(tinh => {
+                    const option = document.createElement('option');
+                    option.value = tinh.idTinh;
+                    option.textContent = tinh.tenTinh;
+                    option.classList.add('option-black');
+                    selectTinh.appendChild(option);
+                });
+            })
+            .catch(error => console.error('Lỗi khi lấy danh sách Tỉnh:', error));
+    }
+
+    function fetchHuyen() {
+        const tinhId = document.getElementById('TinhTP').value;
+        if (!tinhId) {
+            console.error('Vui lòng chọn một tỉnh trước khi tiếp tục.');
+            return;
+        }
+        fetch('https://localhost:7196/huyen', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ idTinh: tinhId })
+        })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(errorData => {
+                        throw new Error('Lỗi từ máy chủ: ' + JSON.stringify(errorData));
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (!Array.isArray(data)) {
+                    throw new Error('Expected an array but got: ' + JSON.stringify(data));
+                }
+                const selectHuyen = document.getElementById('QuanHuyen');
+                selectHuyen.innerHTML = '';
+                data.forEach(huyen => {
+                    const option = document.createElement('option');
+                    option.value = huyen.idHuyen;
+                    option.textContent = huyen.tenHuyen;
+                    option.classList.add('option-black');
+                    selectHuyen.appendChild(option);
+                });
+            })
+            .catch(error => console.error('Lỗi khi lấy danh sách Huyện:', error));
+    }
+
+    function fetchPhuong() {
+        const huyenId = document.getElementById('QuanHuyen').value;
+        if (!huyenId) {
+            console.error('Vui lòng chọn một huyện trước khi tiếp tục.');
+            return;
+        }
+        fetch('https://localhost:7196/phuong', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ idHuyen: huyenId })
+        })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(errorData => {
+                        throw new Error('Lỗi từ máy chủ: ' + JSON.stringify(errorData));
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (!Array.isArray(data)) {
+                    throw new Error('Expected an array but got: ' + JSON.stringify(data));
+                }
+                const selectPhuong = document.getElementById('PhuongXa');
+                selectPhuong.innerHTML = '';
+                data.forEach(phuong => {
+                    const option = document.createElement('option');
+                    option.value = phuong.idPhuong;
+                    option.textContent = phuong.tenPhuong;
+                    option.classList.add('option-black');
+                    selectPhuong.appendChild(option);
+                });
+            })
+            .catch(error => console.error('Lỗi khi lấy danh sách Phường:', error));
+    }
+    const form = document.getElementById('myForm');
+    form.addEventListener('submit', function (event) {
+        event.preventDefault();
+        const formData = new FormData(form);
+        const formValues = {};
+        for (const [key, value] of formData.entries()) {
+            formValues[key] = value;
+        }
+        console.log('Dữ liệu đã nhập:', formValues);
+    });
+
+
+   
+</script>
